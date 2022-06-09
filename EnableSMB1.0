@@ -1,0 +1,36 @@
+Try {
+    [string]$OperatingSystemName = (Get-WmiObject -Class Win32_OperatingSystem).Name
+    
+    switch -Regex ($OperatingSystemName) {
+        '(Windows 10|Windows 11)' 
+            {
+                # Windows 10 / Windows 11
+                if ((Get-WindowsOptionalFeature –Online –FeatureName SMB1Protocol).state -match 'Disabled') {
+                    Enable-WindowsOptionalFeature -NoRestart -Online -FeatureName smb1protocol
+                }
+            }
+        '(Windows Server 2016|Windows Server 2012 R2)' 
+            {
+                # Windows Server 2016 / Windows Server 2012 R2
+                if (((Get-WindowsFeature FS-SMB1).InstallState) -match 'Available') {
+                    Enable-WindowsOptionalFeature -NoRestart -Online -FeatureName smb1protocol
+                }
+            }
+
+        '(Windows 7|Windows Server 2008 R2)'
+            {
+                # Windows 7 / Windows Server 2008 R2
+                if ((((Get-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" -Name SMB1 -ErrorAction SilentlyContinue).SMB1) -ne '1')) {
+                    Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" SMB1 -Type DWORD -Value 1 –Force
+                }
+            }
+        default {
+            Throw "Unsupported Operating System"
+        }
+    }
+
+} Catch {
+    $LastError = $Error | Select-Object -First 1 -ExpandProperty Exception | Select-Object -ExpandProperty Message
+    Write-Warning -Message $LastError
+    Exit
+}
