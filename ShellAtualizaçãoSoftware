@@ -1,0 +1,17 @@
+cls
+#Remoção Universal Adobe Reader
+$local = Get-Location
+Start-Process -FilePath "$local\AdobeAcroCleaner_DC2021.exe" -ArgumentList "/Silent"
+Start-Sleep -Seconds 150
+If (Get-process -Name "AdobeAcroCleaner_DC2021" -ea SilentlyContinue) {Stop-Process -Name "AdobeAcroCleaner_DC2021" -Force}
+If (Test-Path -LiteralPath "${env:ProgramFiles(x86)}\Adobe\Acrobat Reader DC") {Remove-Item -Literalpath "${env:ProgramFiles(x86)}\Adobe\Acrobat Reader DC" -Recurse}
+If (Test-Path -LiteralPath "HKLM:\SOFTWARE\Classes\Installer\Products\68AB67CA7DA76401B744CAF070E41400") {Remove-Item -Literalpath "HKLM:\SOFTWARE\Classes\Installer\Products\68AB67CA7DA76401B744CAF070E41400" -Recurse}
+
+
+#Instalação Adobe Reader
+$local = Get-Location
+Start-Process -FilePath "$local\AcroPro.msi" -ArgumentList "/quiet" -Wait
+
+#Atualização Adobe Reader 22.002.20212
+$local = Get-Location
+Start-Process -FilePath "$local\AcroRdrDCx64Upd2200220212_MUI.msp" -ArgumentList "/quiet" -Wait
