@@ -1,0 +1,12 @@
+cls
+Try {
+    if (Get-CimInstance -Class Win32_Product | select Name, Version, IdentifyingNumber | where {$_.Name -match '#software#' -and $_.Version -ge #version# }) {
+        write-Output "Instalado"
+        Exit 0
+    } else {
+        Exit 0
+      }
+} Catch {
+    Write-Error $_
+    Exit 1
+}
