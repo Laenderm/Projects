@@ -1,0 +1,16 @@
+cls
+#Start-Process -FilePath "$Local\FileOptimizerSetup_15.80.0.exe" -ArgumentList "/S /v/qn"
+#Start-Process "C:\Program Files\FileOptimizer\Uninstall.exe"+" /silent" -Wait -ea Stop
+
+$Users       = @(Get-ChildItem "C:\Users\")
+#Remoção File Optimizer
+if(Test-Path "C:\Program Files\FileOptimizer\Uninstall.exe"){
+    Start-Process -FilePath "C:\Program Files\FileOptimizer\Uninstall.exe" -ArgumentList "/S /v/qn"}
+
+If (Test-Path -LiteralPath "C:\Program Files\FileOptimizer") {
+    Remove-Item -LiteralPath "C:\Program Files\FileOptimizer" -Force -Recurse -ea SilentlyContinue}
+
+    Foreach ($User in $Users.Name){
+     If (Test-Path -LiteralPath "C:\Users\$user\Desktop\FileOptimizer.lnk") {
+        Remove-item -LiteralPath "C:\Users\$user\Desktop\FileOptimizer.lnk" -Force -Recurse -ea SilentlyContinue}
+}
