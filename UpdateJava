@@ -2,7 +2,8 @@ cls
 $Local = Get-Location
 $text = Get-Content "$Local\Java.txt"
 [string]$MSI = (Get-WmiObject -Class Win32_Product).IdentifyingNumber
-$test = $MSI -split "}" 
+$test = $MSI -split "}"
+#Java.txt> Criar arquivo txt com as msi product code encontradas em relatorio
 
 foreach ($element in $test) {
     $elementString = $element -replace " ", "" -replace "{", ""
