@@ -13,17 +13,6 @@ foreach ($element in $test) {
     }
 }
 
-
-
-#Identificar PJE Mídia - Instalação Plug-in Java x64
-
-If (Test-Path -LiteralPath "C:\Arquivos de Programas CNJ\AD\1.2.0\unins000.exe") {
-$local = Get-Location
-(Start-Process -FilePath "$local\jre1.8.0_33364.msi" -ArgumentList "/qb" -Wait)
-    Write-Host "Instalado com Êxito"
-}
-
-
 #Instalação Plug-in Java x86
 $local = Get-Location
 (Start-Process -FilePath "$local\jre1.8.0_333.msi" -ArgumentList "/qb" -Wait)
