@@ -1,0 +1,19 @@
+cls
+$local = Get-Location
+If (Get-process -Name "vlc" -ea SilentlyContinue) {Stop-Process -Name "vlc" -Force}
+
+if (Test-Path "${env:programfiles}\VideoLAN\VLC\uninstall.exe"){
+    Start-Process -FilePath "${env:programfiles}\VideoLAN\VLC\uninstall.exe" -ArgumentList "/L=1033 /S" -Wait -ea Stop
+    Remove-Item -Literalpath "${env:programfiles}\VideoLAN" -Force -Recurse -ErrorAction SilentlyContinue 
+}
+
+#Instalação x86
+if ((Get-WmiObject -Class win32_computersystem).systemtype -match "x86") {
+    Start-Process -FilePath "$local\vlc-3.0.18-win32.exe" -ArgumentList "/L=1033 /S" -Wait -ea SilentlyContinue
+}
+#Instalação x64
+Elseif ((Get-WmiObject -Class win32_computersystem).systemtype -match "x64") {
+    Start-Process -FilePath "$local\vlc-3.0.18-win64.exe" -ArgumentList "/L=1033 /S" -Wait -ea SilentlyContinue
+}
+
+        Start-Sleep -s 8
